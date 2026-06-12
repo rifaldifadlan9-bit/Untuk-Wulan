@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hai Wulan 🌙</title>
+<meta name="theme-color" content="#e8a0c8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   HAI WULAN 🌙 — a scroll-driven digital letter
+   Palette: bright cosmic pink / lavender / peach glow
+   Display: Fraunces (3D extruded) · Body: Plus Jakarta Sans
+   ============================================================ */
+:root{
+  --pink-1:#ffd6ec;   /* lightest blush */
+  --pink-2:#f7a8d8;   /* main pink */
+  --pink-3:#d96bb8;   /* deep rose */
+  --violet:#9b7bd8;   /* soft violet */
+  --peach:#ffd9a8;    /* warm peach glow */
+  --ink:#4a2050;      /* deep plum text */
+  --white:#fff8fc;
+  --glass:rgba(255,248,252,.16);
+  --glass-brd:rgba(255,255,255,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:#caa0e8;
+  color:var(--white);
+  overflow-x:hidden;
+}
+
+/* ---------- fixed star canvas behind everything ---------- */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ---------- progress bar ---------- */
+#bar{position:fixed;top:0;left:0;height:4px;width:0%;z-index:60;
+  background:linear-gradient(90deg,var(--pink-2),var(--peach),var(--pink-2));
+  background-size:200% 100%;animation:shimmer 2.5s linear infinite;
+  border-radius:0 4px 4px 0;box-shadow:0 0 12px var(--pink-2)}
+@keyframes shimmer{to{background-position:200% 0}}
+
+/* ---------- music toggle ---------- */
+#musicBtn{position:fixed;top:max(12px,env(safe-area-inset-top));right:14px;z-index:60;
+  width:46px;height:46px;border-radius:50%;border:1.5px solid var(--glass-brd);
+  background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 20px rgba(120,40,110,.35);transition:transform .25s}
+#musicBtn:active{transform:scale(.88)}
+#musicBtn.playing{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(247,168,216,.55)}50%{box-shadow:0 0 0 12px rgba(247,168,216,0)}}
+
+/* ---------- sections & parallax ---------- */
+.scene{position:relative;min-height:100svh;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:14vh 22px;z-index:1}
+.bg{position:absolute;inset:-12%;z-index:-2;background-size:cover;background-position:center;
+  will-change:transform;transform:translateY(0) scale(1.12)}
+.bg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,214,236,.30),rgba(155,123,216,.18) 50%,rgba(255,214,236,.34));}
+.haze{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 40% at 50% 20%,rgba(255,255,255,.22),transparent 70%)}
+
+/* floating decor planets / orbs that drift actively */
+.orb{position:absolute;border-radius:50%;z-index:-1;pointer-events:none;filter:blur(1px);
+  background:radial-gradient(circle at 32% 30%,#fff8fc,var(--pink-2) 45%,var(--violet) 100%);
+  box-shadow:0 0 40px 8px rgba(255,200,235,.55);opacity:.85;will-change:transform;
+  animation:drift 9s ease-in-out infinite alternate}
+.orb.o2{background:radial-gradient(circle at 35% 30%,#fff,var(--peach) 50%,var(--pink-3));animation-duration:7s}
+.orb.o3{background:radial-gradient(circle at 30% 35%,#fff,var(--violet) 55%,#7b5bb8);animation-duration:11s}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(26px,-34px) scale(1.07)}
+  100%{transform:translate(-20px,22px) scale(.95)}}
+
+/* ---------- 3D display type ---------- */
+.t3d{
+  font-family:'Fraunces',serif;font-weight:900;line-height:1.04;
+  color:#fff;letter-spacing:.5px;
+  text-shadow:
+    0 1px 0 #f3b9dd, 0 2px 0 #eda9d4, 0 3px 0 #e699cb,
+    0 4px 0 #d986bd, 0 5px 0 #c873ae, 0 6px 0 #b262a0,
+    0 7px 0 #9a5290, 0 10px 6px rgba(90,30,90,.40),
+    0 18px 30px rgba(120,40,120,.35);
+  transform:perspective(700px) rotateX(8deg);
+}
+.t3d.big{font-size:clamp(52px,15vw,120px)}
+.t3d.mid{font-size:clamp(34px,9vw,64px)}
+.t3d.float{animation:bob 5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:perspective(700px) rotateX(8deg) translateY(0)}
+  50%{transform:perspective(700px) rotateX(8deg) translateY(-12px)}}
+
+.script{font-family:'Caveat',cursive;font-weight:700;color:var(--peach);
+  text-shadow:0 2px 0 rgba(160,70,40,.35),0 6px 16px rgba(120,40,120,.4)}
+
+/* body copy lines that reveal on scroll */
+.line{font-size:clamp(19px,5.4vw,26px);font-weight:600;text-align:center;max-width:560px;
+  margin:14px auto;color:var(--white);
+  text-shadow:0 2px 0 rgba(150,60,140,.45),0 8px 22px rgba(110,30,110,.45)}
+.line .script{font-size:1.35em}
+
+/* reveal animation */
+.rv{opacity:0;transform:translateY(46px) scale(.97);
+  transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:translateY(0) scale(1)}
+.rv.d1{transition-delay:.12s}.rv.d2{transition-delay:.24s}.rv.d3{transition-delay:.36s}
+.rv.d4{transition-delay:.48s}.rv.d5{transition-delay:.6s}
+
+/* scroll hint */
+.hint{position:absolute;bottom:max(26px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;opacity:.95}
+.hint .moon{font-size:26px;animation:dip 1.6s ease-in-out infinite}
+@keyframes dip{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+
+/* ---------- question cards ---------- */
+.qcard{width:min(560px,100%);border-radius:28px;padding:26px 22px 24px;
+  background:linear-gradient(160deg,rgba(255,255,255,.30),rgba(255,255,255,.12));
+  border:1.5px solid var(--glass-brd);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  box-shadow:0 18px 50px rgba(120,40,120,.32), inset 0 1px 0 rgba(255,255,255,.5)}
+.qnum{font-family:'Caveat',cursive;font-size:22px;color:var(--peach);font-weight:700;
+  text-shadow:0 2px 8px rgba(120,40,120,.5)}
+.qtext{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(21px,5.8vw,28px);
+  line-height:1.22;margin:6px 0 18px;color:#fff;
+  text-shadow:0 2px 0 #d986bd,0 4px 0 #b262a0,0 9px 20px rgba(110,30,110,.45)}
+.opts{display:flex;flex-direction:column;gap:11px}
+.opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;
+  background:rgba(255,255,255,.20);border:1.5px solid rgba(255,255,255,.35);
+  font-weight:600;font-size:16px;cursor:pointer;user-select:none;
+  transition:transform .18s,background .25s,border-color .25s,box-shadow .25s}
+.opt .em{font-size:21px}
+.opt:active{transform:scale(.97)}
+.opt.sel{background:linear-gradient(135deg,rgba(255,217,168,.85),rgba(247,168,216,.85));
+  border-color:#fff;color:var(--ink);
+  box-shadow:0 8px 24px rgba(255,180,220,.55), inset 0 1px 0 #fff}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips .opt{flex-direction:row;padding:11px 15px;border-radius:999px;font-size:15px}
+
+/* slider */
+.slWrap{padding:8px 4px 2px}
+.slLbl{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;margin-bottom:10px;
+  color:#fff;text-shadow:0 1px 6px rgba(110,30,110,.5)}
+input[type=range]{width:100%;height:30px;-webkit-appearance:none;appearance:none;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:12px;border-radius:99px;
+  background:linear-gradient(90deg,var(--peach),var(--pink-2),var(--violet));
+  box-shadow:inset 0 2px 5px rgba(110,30,110,.35)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-9px;
+  border-radius:50%;background:radial-gradient(circle at 32% 30%,#fff,var(--pink-2));
+  border:2.5px solid #fff;box-shadow:0 4px 14px rgba(140,50,130,.55);cursor:pointer}
+.slVal{text-align:center;margin-top:10px;font-family:'Caveat',cursive;font-size:24px;color:var(--peach);
+  font-weight:700;text-shadow:0 2px 8px rgba(120,40,120,.5)}
+
+/* free text */
+textarea,.otherInput{width:100%;border-radius:18px;border:1.5px solid rgba(255,255,255,.45);
+  background:rgba(255,255,255,.22);padding:15px 16px;font-family:inherit;font-size:16px;
+  color:#fff;font-weight:600;resize:none;outline:none;
+  box-shadow:inset 0 2px 8px rgba(120,40,120,.2)}
+textarea::placeholder,.otherInput::placeholder{color:rgba(255,248,252,.75)}
+textarea:focus,.otherInput:focus{border-color:var(--peach);background:rgba(255,255,255,.3)}
+.optional{font-size:12.5px;font-weight:600;opacity:.85;margin-top:8px;letter-spacing:.4px}
+
+/* ---------- "giliranku" cards ---------- */
+.meCard{width:min(540px,100%);margin:13px auto;padding:22px 22px;border-radius:24px;
+  background:linear-gradient(150deg,rgba(255,255,255,.30),rgba(255,255,255,.10));
+  border:1.5px solid var(--glass-brd);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 14px 40px rgba(120,40,120,.30);
+  font-size:clamp(17px,4.8vw,21px);font-weight:600;line-height:1.45;
+  display:flex;gap:14px;align-items:flex-start;
+  text-shadow:0 1px 8px rgba(110,30,110,.4)}
+.meCard .n{font-family:'Caveat',cursive;font-size:30px;color:var(--peach);font-weight:700;line-height:1;
+  text-shadow:0 2px 0 rgba(160,70,40,.3),0 4px 12px rgba(120,40,120,.5)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;border:none;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:800;font-size:19px;letter-spacing:.4px;
+  color:var(--ink);padding:17px 34px;border-radius:999px;
+  background:linear-gradient(135deg,#ffe9c4,var(--peach) 30%,var(--pink-2) 90%);
+  box-shadow:0 6px 0 #c873ae,0 16px 34px rgba(140,50,130,.45), inset 0 2px 0 #fff;
+  transition:transform .15s,box-shadow .15s}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 #c873ae,0 8px 18px rgba(140,50,130,.4)}
+.btn.wa{background:linear-gradient(135deg,#c8ffd9,#7be3a3 40%,#3ecf7a);box-shadow:0 6px 0 #1f9c55,0 16px 34px rgba(20,120,70,.45),inset 0 2px 0 #fff}
+.btn.wa:active{box-shadow:0 1px 0 #1f9c55,0 8px 18px rgba(20,120,70,.4)}
+
+/* floating WA dock — always reachable, never below the fold */
+#waDock{position:fixed;left:50%;transform:translate(-50%,140px);
+  bottom:calc(max(16px,env(safe-area-inset-bottom)) + 6px);z-index:55;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);width:min(440px,calc(100% - 32px))}
+#waDock.show{transform:translate(-50%,0)}
+#waDock .btn{width:100%;justify-content:center;font-size:18px;padding:16px 20px}
+#waNote{text-align:center;font-size:12px;font-weight:700;margin-top:7px;
+  color:#fff;text-shadow:0 1px 6px rgba(110,30,110,.6);letter-spacing:.3px}
+
+/* shooting star layer accent on hero */
+.heroName{position:relative;z-index:2;text-align:center}
+.heroSub{margin-top:18px;font-size:clamp(16px,4.6vw,20px);font-weight:600;letter-spacing:.3px;
+  text-shadow:0 2px 10px rgba(110,30,110,.55)}
+.datePill{display:inline-block;margin-top:22px;padding:10px 22px;border-radius:999px;
+  background:var(--glass);border:1.5px solid var(--glass-brd);backdrop-filter:blur(12px);
+  font-weight:700;font-size:14.5px;letter-spacing:1.5px;text-transform:uppercase;
+  box-shadow:0 8px 24px rgba(120,40,120,.3)}
+
+/* zoom-on-scroll photo frames */
+.frame{width:min(420px,86%);border-radius:30px;overflow:hidden;margin:26px auto 0;
+  border:2px solid rgba(255,255,255,.55);box-shadow:0 24px 60px rgba(120,40,120,.45);
+  transform:scale(.86);transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.frame.in{transform:scale(1)}
+.frame img{display:block;width:100%;will-change:transform;transform:scale(1.25)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  .bg{transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div id="bar"></div>
+<button id="musicBtn" aria-label="Musik">🎵</button>
+
+<!-- ============ SCENE 1 · HERO ============ -->
+<section class="scene" id="hero">
+  <div class="bg" data-speed="0.25" style="background-image:url('assets/bg6.webp')"></div>
+  <div class="haze"></div>
+  <div class="orb" style="width:90px;height:90px;top:14%;left:8%"></div>
+  <div class="orb o2" style="width:54px;height:54px;top:22%;right:10%"></div>
+  <div class="orb o3" style="width:70px;height:70px;bottom:24%;right:16%"></div>
+  <div class="heroName">
+    <div class="rv"><span class="script" style="font-size:clamp(26px,7vw,38px)">dibuat khusus untukmu…</span></div>
+    <h1 class="t3d big float rv d1" id="tiltMe">Hai,<br>Wulan&nbsp;🌙</h1>
+    <p class="heroSub rv d2">.<br>Ohya, Sebelum lanjut klik tombol Musik<br>di pojok Kanan Atas Ya. Have a good journey.</p>
+    <div class="datePill rv d3">✨ Jumat · 12 Juni 2026 · Hari ini ✨</div>
+  </div>
+  <div class="hint"><span>scroll pelan-pelan</span><span class="moon">🌙</span></div>
+</section>
+
+<!-- ============ SCENE 2 · PEMBUKA ============ -->
+<section class="scene">
+  <div class="bg" data-speed="0.22" style="background-image:url('assets/bg7.webp')"></div>
+  <div class="orb o2" style="width:64px;height:64px;top:10%;right:8%"></div>
+  <div class="orb" style="width:44px;height:44px;bottom:16%;left:10%"></div>
+  <p class="line rv">Halo. 👋</p>
+  <p class="line rv d1">Sebelum kita bertemu <b>hari ini</b>…</p>
+  <p class="line rv d2">ada satu masalah kecil:</p>
+  <p class="line rv d3"><span class="script">aku belum benar-benar mengenalmu.</span></p>
+  <p class="line rv d4">Dan aku tidak ingin menebak-nebak hal yang kamu sukai.</p>
+  <p class="line rv d5">Jadi… aku membuat ini. Khusus untukmu. 🌷</p>
+</section>
+
+<!-- ============ SCENE 3 · TENANG ============ -->
+<section class="scene">
+  <div class="bg" data-speed="0.2" style="background-image:url('assets/bg5.webp')"></div>
+  <div class="orb o3" style="width:80px;height:80px;top:18%;left:6%"></div>
+  <h2 class="t3d mid rv">Tenang saja ✨</h2>
+  <p class="line rv d1">Ini bukan ujian.</p>
+  <p class="line rv d2">Tidak ada jawaban benar atau salah.</p>
+  <p class="line rv d3">Aku hanya ingin mengenalmu <span class="script">sedikit lebih baik</span> —<br></p>
+  <p class="line rv d4" style="font-size:15px;opacity:.9">Jawab sambil scroll saja, santai… ⤵</p>
+</section>
+
+<!-- ============ SCENE 4 · QUESTIONS A ============ -->
+<section class="scene" style="gap:40px">
+  <div class="bg" data-speed="0.18" style="background-image:url('assets/bg5.webp');filter:hue-rotate(-8deg) brightness(1.05)"></div>
+
+  <div class="qcard rv" data-q="1">
+    <div class="qnum">pertanyaan pertama 🌸</div>
+    <div class="qtext">Kalau hari ini benar-benar kosong, kamu lebih memilih…</div>
+    <div class="opts" data-key="aktivitas">
+      <div class="opt"><span class="em">📖</span> Membaca sesuatu</div>
+      <div class="opt"><span class="em">🚶‍♀️</span> Jalan santai</div>
+      <div class="opt"><span class="em">🍜</span> Mencoba makanan baru</div>
+      <div class="opt"><span class="em">🎬</span> Menonton sesuatu</div>
+      <div class="opt"><span class="em">👨‍👩‍👧</span> Quality time dengan keluarga</div>
+      <div class="opt"><span class="em">🛏️</span> Rebahan tanpa rasa bersalah</div>
+    </div>
+  </div>
+
+  <div class="qcard rv" data-q="2">
+    <div class="qnum">kedua 🌿</div>
+    <div class="qtext">Suasana seperti apa yang paling membuatmu nyaman?</div>
+    <div class="opts" data-key="suasana">
+      <div class="opt"><span class="em">☕</span> Kafe hangat</div>
+      <div class="opt"><span class="em">🌳</span> Taman tenang</div>
+      <div class="opt"><span class="em">📚</span> Toko buku</div>
+      <div class="opt"><span class="em">🌇</span> Rooftop sore</div>
+      <div class="opt"><span class="em">🍲</span> Tempat makan sederhana</div>
+    </div>
+  </div>
+
+  <div class="qcard rv" data-q="3">
+    <div class="qnum">ketiga 🎈</div>
+    <div class="qtext">Keramaian membuatmu merasa…</div>
+    <div class="slWrap">
+      <div class="slLbl"><span>Sangat nyaman 😌</span><span>Sangat lelah 🥱</span></div>
+      <input type="range" min="0" max="100" value="50" data-key="keramaian">
+      <div class="slVal" data-val="keramaian">di tengah-tengah 🙂</div>
+    </div>
+  </div>
+
+  <div class="qcard rv" data-q="4">
+    <div class="qnum">keempat 💭</div>
+    <div class="qtext">Kalau ada orang baru yang ingin mengenalmu, apa yang paling kamu harapkan?</div>
+    <div class="opts" data-key="harapan">
+      <div class="opt"><span class="em">👂</span> Pendengar yang baik</div>
+      <div class="opt"><span class="em">😂</span> Lucu</div>
+      <div class="opt"><span class="em">💗</span> Tulus</div>
+      <div class="opt"><span class="em">🙏</span> Sopan</div>
+      <div class="opt"><span class="em">💬</span> Nyambung diajak ngobrol</div>
+      <div class="opt"><span class="em">🕊️</span> Tidak memaksa</div>
+    </div>
+  </div>
+
+  <div class="qcard rv" data-q="5">
+    <div class="qnum">kelima 🍡</div>
+    <div class="qtext">Makanan yang selalu sulit ditolak? <span style="font-size:14px;font-weight:600">(boleh pilih banyak)</span></div>
+    <div class="opts chips multi" data-key="makanan">
+      <div class="opt">🍜 Mie ayam</div><div class="opt">🍢 Bakso</div>
+      <div class="opt">🍣 Sushi</div><div class="opt">🍦 Es krim</div>
+      <div class="opt">🍗 Ayam geprek</div><div class="opt">🥟 Dimsum</div>
+      <div class="opt">🍝 Ramen</div><div class="opt">🥐 Croissant</div>
+      <div class="opt">🍛 Nasi goreng</div><div class="opt">🧋 Boba</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCENE 5 · QUESTIONS B ============ -->
+<section class="scene" style="gap:40px">
+  <div class="bg" data-speed="0.2" style="background-image:url('assets/bg4.webp');filter:brightness(1.25) saturate(1.1)"></div>
+  <div class="orb o2" style="width:70px;height:70px;top:6%;left:8%"></div>
+
+  <div class="qcard rv" data-q="6">
+    <div class="qnum">keenam 🍵</div>
+    <div class="qtext">Minuman favoritmu?</div>
+    <div class="opts" data-key="minuman">
+      <div class="opt"><span class="em">☕</span> Kopi</div>
+      <div class="opt"><span class="em">🍵</span> Teh</div>
+      <div class="opt"><span class="em">🍃</span> Matcha</div>
+      <div class="opt"><span class="em">🍫</span> Cokelat</div>
+      <div class="opt"><span class="em">🧃</span> Jus</div>
+      <div class="opt other"><span class="em">✨</span> Lainnya…</div>
+    </div>
+    <input class="otherInput" data-key="minuman_lain" placeholder="tulis minumanmu di sini…" style="display:none;margin-top:11px">
+  </div>
+
+  <div class="qcard rv" data-q="7">
+    <div class="qnum">ketujuh 🌤️</div>
+    <div class="qtext">Hal sederhana yang bisa membuat harimu lebih baik?</div>
+    <textarea rows="2" data-key="halSederhana" placeholder="apa saja, sekecil apa pun…"></textarea>
+    <div class="optional">boleh dilewati kalau bingung 😊</div>
+  </div>
+
+  <div class="qcard rv" data-q="8">
+    <div class="qnum">kedelapan 🪞</div>
+    <div class="qtext">Orang sering salah paham tentang kamu dalam hal apa?</div>
+    <textarea rows="2" data-key="salahPaham" placeholder="cerita sedikit saja juga boleh…"></textarea>
+    <div class="optional">opsional juga, tenang saja 🌷</div>
+  </div>
+
+  <div class="qcard rv" data-q="9">
+    <div class="qnum">kesembilan 🎭</div>
+    <div class="qtext">Gaya ngobrol yang kamu suka?</div>
+    <div class="slWrap">
+      <div class="slLbl"><span>Bercanda receh 🤭</span><span>Ngobrol mendalam 🌌</span></div>
+      <input type="range" min="0" max="100" value="50" data-key="gayaNgobrol">
+      <div class="slVal" data-val="gayaNgobrol">seimbang dua-duanya ✨</div>
+    </div>
+  </div>
+
+  <div class="qcard rv" data-q="10">
+    <div class="qnum">terakhir… 💌</div>
+    <div class="qtext">Kalau boleh meninggalkan satu pesan untuk Fadlan sebelum bertemu…</div>
+    <textarea rows="4" data-key="pesan" placeholder="tulis apa pun di sini. satu kata pun berarti. 🌙"></textarea>
+  </div>
+</section>
+
+<!-- ============ SCENE 6 · GILIRANKU ============ -->
+<section class="scene">
+  <div class="bg" data-speed="0.22" style="background-image:url('assets/bg2.webp');filter:brightness(1.18)"></div>
+  <div class="orb" style="width:60px;height:60px;top:10%;right:10%"></div>
+  <h2 class="t3d mid rv" style="margin-bottom:18px">Sekarang<br>giliranku 🙋‍♂️</h2>
+  <p class="line rv d1" style="font-size:16px;margin-bottom:6px">Biar adil — lima hal kecil tentang aku:</p>
+  <div class="meCard rv d1"><span class="n">1.</span><span>Aku hampir selalu upload story setiap hari. Jadi kalau kamu kepo, gampang kok. 😄</span></div>
+  <div class="meCard rv d2"><span class="n">2.</span><span>Aku suka membuat sesuatu yang unik ketika penasaran — <i>seperti halaman ini.</i></span></div>
+  <div class="meCard rv d3"><span class="n">3.</span><span>Aku cukup banyak berpikir sebelum bertemu orang baru.</span></div>
+  <div class="meCard rv d4"><span class="n">4.</span><span>Aku suka percakapan yang jujur.</span></div>
+  <div class="meCard rv d5"><span class="n">5.</span><span>Dan jujur saja… aku juga sedikit gugup menunggu hari ini. 🌙</span></div>
+</section>
+
+<!-- ============ SCENE 7 · FINAL ============ -->
+<section class="scene" id="finale">
+  <div class="bg" data-speed="0.18" style="background-image:url('assets/bg3.webp');filter:brightness(1.06)"></div>
+  <h2 class="t3d mid rv">Terima kasih 🌷</h2>
+  <p class="line rv d1">Karena sudah meluangkan beberapa menit untuk ini.</p>
+  <p class="line rv d2">Jawabanmu membantuku menyiapkan hari ini dengan lebih baik.</p>
+  <p class="line rv d3">Dan sekarang… <span class="script">aku jadi sedikit lebih tenang.</span></p>
+  <div class="frame rv d3"><img src="assets/bg3.webp" alt="" data-zoom></div>
+  <p class="line rv d4" style="margin-top:26px"><span class="script" style="font-size:1.6em">Sampai bertemu nanti 🌙</span></p>
+  <div style="height:120px"></div><!-- ruang untuk dock WA -->
+</section>
+
+<!-- floating WA dock -->
+<div id="waDock">
+  <button class="btn wa" id="waBtn">💬&nbsp; Kirim ke Fadlan 🌙</button>
+  <div id="waNote">jawabanmu terkirim lewat WhatsApp — kamu yang pegang kendali ✨</div>
+</div>
+
+<script>
+/* ============================================================
+   STATE — semua jawaban hidup di sini + localStorage
+   ============================================================ */
+const WA_NUMBER = "6289656346986";
+const state = JSON.parse(localStorage.getItem('wulanAnswers') || '{}');
+state.makanan = state.makanan || [];
+const save = () => localStorage.setItem('wulanAnswers', JSON.stringify(state));
+
+/* ---------- single select & multi select ---------- */
+document.querySelectorAll('.opts').forEach(group=>{
+  const key = group.dataset.key, multi = group.classList.contains('multi');
+  group.querySelectorAll('.opt').forEach(opt=>{
+    const label = opt.textContent.trim();
+    // restore
+    if(multi ? state[key].includes(label) : state[key]===label) opt.classList.add('sel');
+    opt.addEventListener('click',()=>{
+      if(multi){
+        opt.classList.toggle('sel');
+        state[key] = [...group.querySelectorAll('.opt.sel')].map(o=>o.textContent.trim());
+      }else{
+        group.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+        opt.classList.add('sel');
+        state[key] = label;
+        // "Lainnya" → tampilkan input
+        const inp = group.parentElement.querySelector('.otherInput');
+        if(inp) inp.style.display = opt.classList.contains('other') ? 'block' : 'none';
+      }
+      save(); twinkle();
+    });
+  });
+});
+
+/* ---------- sliders dengan label hidup ---------- */
+const sliderWords = {
+  keramaian: v => v<25?'sangat nyaman di keramaian 😌':v<45?'lumayan nyaman 🙂':v<60?'di tengah-tengah 🙂':v<80?'lebih suka yang tenang 🌿':'sangat butuh tempat tenang 🕊️',
+  gayaNgobrol: v => v<25?'tim bercanda receh 🤭':v<45?'lebih banyak bercandanya 😄':v<60?'seimbang dua-duanya ✨':v<80?'suka obrolan bermakna 🌙':'deep talk sampai larut 🌌'
+};
+document.querySelectorAll('input[type=range]').forEach(sl=>{
+  const key = sl.dataset.key;
+  if(state[key]!=null) sl.value = state[key];
+  const out = document.querySelector(`[data-val="${key}"]`);
+  const upd = ()=>{ out.textContent = sliderWords[key](+sl.value); };
+  upd();
+  sl.addEventListener('input',()=>{ state[key]=+sl.value; upd(); save(); });
+});
+
+/* ---------- text inputs ---------- */
+document.querySelectorAll('textarea,.otherInput').forEach(t=>{
+  const key=t.dataset.key;
+  if(state[key]) t.value = state[key];
+  if(key==='minuman_lain' && state[key]) t.style.display='block';
+  t.addEventListener('input',()=>{ state[key]=t.value; save(); });
+});
+
+/* ============================================================
+   WHATSAPP — pesan hangat, bukan dump survey
+   ============================================================ */
+function buildMessage(){
+  const s=state, line=[];
+  line.push("Hii Fadlan 🌙");
+  line.push("Udah aku isi yaa, semoga membantu untuk hari ini 😊");
+  line.push("");
+  if(s.aktivitas)   line.push("Kalau hariku kosong: " + s.aktivitas);
+  if(s.suasana)     line.push("Suasana favoritku: " + s.suasana);
+  if(s.keramaian!=null) line.push("Soal keramaian: " + sliderWords.keramaian(s.keramaian));
+  if(s.harapan)     line.push("Yang aku harapkan dari orang baru: " + s.harapan);
+  if(s.makanan.length) line.push("Makanan yang sulit kutolak: " + s.makanan.join(", "));
+  if(s.minuman)     line.push("Minuman favorit: " + (s.minuman.includes('Lainnya') && s.minuman_lain ? s.minuman_lain : s.minuman));
+  if(s.halSederhana)line.push("Hal sederhana yang membuat hariku lebih baik: " + s.halSederhana);
+  if(s.salahPaham)  line.push("Orang sering salah paham soal: " + s.salahPaham);
+  if(s.gayaNgobrol!=null) line.push("Gaya ngobrolku: " + sliderWords.gayaNgobrol(s.gayaNgobrol));
+  line.push("");
+  if(s.pesan) line.push("Dan pesanku untukmu… 💌\n\"" + s.pesan + "\"");
+  line.push("");
+  line.push("Sampai bertemu nanti 🌙");
+  return line.join("\n");
+}
+document.getElementById('waBtn').addEventListener('click',()=>{
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(buildMessage())}`,'_blank');
+});
+
+/* dock muncul setelah dia mulai menjawab (≥3 jawaban) ATAU mendekati akhir */
+const dock = document.getElementById('waDock');
+function answered(){ let n=0; ['aktivitas','suasana','harapan','minuman'].forEach(k=>state[k]&&n++);
+  if(state.makanan.length)n++; if(state.keramaian!=null)n++; return n; }
+function checkDock(){
+  const nearEnd = window.scrollY + innerHeight > document.body.scrollHeight - innerHeight*1.6;
+  dock.classList.toggle('show', nearEnd || answered()>=4);
+}
+
+/* ============================================================
+   SCROLL ENGINE — reveal, parallax, zoom, progress
+   ============================================================ */
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add('in'); }
+}),{threshold:.18});
+document.querySelectorAll('.rv,.frame').forEach(el=>io.observe(el));
+
+const bgs=[...document.querySelectorAll('.bg')];
+const zoomImgs=[...document.querySelectorAll('[data-zoom]')];
+let ticking=false;
+function onScroll(){
+  if(ticking) return; ticking=true;
+  requestAnimationFrame(()=>{
+    const y=window.scrollY, H=document.body.scrollHeight-innerHeight;
+    document.getElementById('bar').style.width=(y/H*100)+'%';
+    bgs.forEach(bg=>{
+      const r=bg.parentElement.getBoundingClientRect();
+      if(r.bottom<0||r.top>innerHeight) return;
+      const sp=+bg.dataset.speed;
+      const prog=(innerHeight-r.top)/(innerHeight+r.height); // 0→1
+      bg.style.transform=`translateY(${(prog-.5)*r.height*sp}px) scale(${1.12+prog*.06})`;
+    });
+    zoomImgs.forEach(img=>{
+      const r=img.getBoundingClientRect();
+      if(r.bottom<0||r.top>innerHeight) return;
+      const prog=Math.min(1,Math.max(0,(innerHeight-r.top)/(innerHeight+r.height)));
+      img.style.transform=`scale(${1.28-prog*.24})`;
+    });
+    checkDock();
+    ticking=false;
+  });
+}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+/* tilt 3D hero pakai gyroscope hp */
+const tiltEl=document.getElementById('tiltMe');
+addEventListener('deviceorientation',e=>{
+  if(e.beta==null) return;
+  const rx=8+Math.max(-8,Math.min(8,(e.beta-45)/6));
+  const ry=Math.max(-10,Math.min(10,e.gamma/6));
+  tiltEl.style.transform=`perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  tiltEl.classList.remove('float');
+});
+
+/* ============================================================
+   STARFIELD CANVAS — aktif & hidup: bintang, bokeh, meteor
+   ============================================================ */
+const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+let W,Hc,stars=[],bokeh=[],meteors=[];
+function resize(){W=cv.width=innerWidth*devicePixelRatio;Hc=cv.height=innerHeight*devicePixelRatio;
+  cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';
+  stars=Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*Hc,
+    r:(Math.random()*1.6+.5)*devicePixelRatio,tw:Math.random()*6.28,sp:.3+Math.random()*1.4}));
+  bokeh=Array.from({length:14},()=>({x:Math.random()*W,y:Math.random()*Hc,
+    r:(14+Math.random()*30)*devicePixelRatio,vx:(Math.random()-.5)*.6,vy:-(.3+Math.random()*.7),
+    hue:Math.random()<.5?'255,200,235':'255,222,180',a:.05+Math.random()*.09}));}
+resize();addEventListener('resize',resize);
+function spawnMeteor(){meteors.push({x:Math.random()*W*.8+W*.1,y:-30,vx:(2.5+Math.random()*2)*devicePixelRatio,
+  vy:(3.5+Math.random()*2.5)*devicePixelRatio,life:1});}
+setInterval(()=>{if(Math.random()<.55)spawnMeteor()},1700);
+let t=0;
+(function loop(){
+  t+=.016;cx.clearRect(0,0,W,Hc);
+  // bokeh besar yang melayang naik (aktif)
+  bokeh.forEach(b=>{
+    b.x+=b.vx*devicePixelRatio;b.y+=b.vy*devicePixelRatio;
+    if(b.y<-b.r){b.y=Hc+b.r;b.x=Math.random()*W}
+    const g=cx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+    g.addColorStop(0,`rgba(${b.hue},${b.a*2})`);g.addColorStop(1,`rgba(${b.hue},0)`);
+    cx.fillStyle=g;cx.beginPath();cx.arc(b.x,b.y,b.r,0,6.28);cx.fill();
+  });
+  // bintang berkelip cepat
+  stars.forEach(s=>{
+    const a=.45+.55*Math.sin(t*s.sp*3+s.tw);
+    cx.fillStyle=`rgba(255,255,255,${a})`;
+    cx.beginPath();cx.arc(s.x,s.y,s.r*(0.8+.3*a),0,6.28);cx.fill();
+  });
+  // meteor
+  meteors=meteors.filter(m=>m.life>0);
+  meteors.forEach(m=>{
+    m.x+=m.vx;m.y+=m.vy;m.life-=.012;
+    const g=cx.createLinearGradient(m.x,m.y,m.x-m.vx*12,m.y-m.vy*12);
+    g.addColorStop(0,`rgba(255,255,255,${m.life})`);g.addColorStop(1,'rgba(255,255,255,0)');
+    cx.strokeStyle=g;cx.lineWidth=2*devicePixelRatio;cx.beginPath();
+    cx.moveTo(m.x,m.y);cx.lineTo(m.x-m.vx*12,m.y-m.vy*12);cx.stroke();
+  });
+  requestAnimationFrame(loop);
+})();
+function twinkle(){for(let i=0;i<2;i++)spawnMeteor()}
+
+/* ============================================================
+   MUSIK — ambient generatif (Web Audio), hangat & cukup kencang
+   chord pad + melodi kalimba pentatonik + sub lembut
+   ============================================================ */
+let AC,master,playing=false;
+const btnM=document.getElementById('musicBtn');
+function initAudio(){
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  master=AC.createGain();master.gain.value=0; // fade in nanti
+  const comp=AC.createDynamicsCompressor();
+  comp.threshold.value=-18;comp.ratio.value=6;
+  master.connect(comp);comp.connect(AC.destination);
+  // delay/echo bikin dreamy
+  const dly=AC.createDelay(1);dly.delayTime.value=.42;
+  const fb=AC.createGain();fb.gain.value=.34;
+  const wet=AC.createGain();wet.gain.value=.5;
+  dly.connect(fb);fb.connect(dly);dly.connect(wet);wet.connect(master);
+  AC._dly=dly;
+
+  // ---- chord pad: progresi I–V–vi–IV di A major, hangat ----
+  const chords=[[220,277.18,329.63],[164.81,246.94,329.63],[185,220,277.18],[146.83,220,293.66]];
+  let ci=0;
+  function pad(){
+    const c=chords[ci%4];ci++;
+    c.forEach((f,i)=>{
+      const o=AC.createOscillator(),g=AC.createGain();
+      o.type=i===0?'sine':'triangle';o.frequency.value=f;
+      o.detune.value=(Math.random()-.5)*8;
+      const now=AC.currentTime;
+      g.gain.setValueAtTime(0,now);
+      g.gain.linearRampToValueAtTime(.10,now+1.6);
+      g.gain.linearRampToValueAtTime(.0001,now+6.4);
+      o.connect(g);g.connect(master);g.connect(AC._dly);
+      o.start(now);o.stop(now+6.6);
+    });
+    if(playing)setTimeout(pad,6000);
+  }
+  // ---- kalimba pluck pentatonik ----
+  const scale=[440,493.88,554.37,659.25,739.99,880,987.77];
+  function pluck(){
+    const f=scale[Math.floor(Math.random()*scale.length)];
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.value=f;
+    const now=AC.currentTime;
+    g.gain.setValueAtTime(.22,now);
+    g.gain.exponentialRampToValueAtTime(.0001,now+1.4);
+    o.connect(g);g.connect(master);g.connect(AC._dly);
+    o.start(now);o.stop(now+1.5);
+    if(playing)setTimeout(pluck,650+Math.random()*1400);
+  }
+  // ---- sub heartbeat lembut ----
+  function sub(){
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.value=55;
+    const now=AC.currentTime;
+    g.gain.setValueAtTime(.0001,now);
+    g.gain.exponentialRampToValueAtTime(.12,now+.06);
+    g.gain.exponentialRampToValueAtTime(.0001,now+.9);
+    o.connect(g);g.connect(master);o.start(now);o.stop(now+1);
+    if(playing)setTimeout(sub,3000);
+  }
+  AC._start=()=>{pad();pluck();sub();};
+}
+function toggleMusic(){
+  if(!AC)initAudio();
+  if(AC.state==='suspended')AC.resume();
+  playing=!playing;
+  btnM.classList.toggle('playing',playing);
+  btnM.textContent=playing?'🔊':'🎵';
+  const now=AC.currentTime;
+  master.gain.cancelScheduledValues(now);
+  if(playing){AC._start();master.gain.linearRampToValueAtTime(.85,now+1.5);} // cukup kencang utk outdoor
+  else master.gain.linearRampToValueAtTime(0,now+.6);
+}
+btnM.addEventListener('click',toggleMusic);
+/* tawarkan musik otomatis pada sentuhan pertama (kebijakan autoplay browser) */
+let firstTouch=true;
+addEventListener('touchstart',()=>{ if(firstTouch && !playing){ toggleMusic(); } firstTouch=false; },{once:true,passive:true});
+addEventListener('mousedown',()=>{ if(firstTouch && !playing){ toggleMusic(); } firstTouch=false; },{once:true});
+</script>
+</body>
+</html>
